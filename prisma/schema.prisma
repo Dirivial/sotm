@@ -11,24 +11,133 @@ datasource db {
     relationMode = "prisma"
 }
 
-// generator client {
-//     provider = "prisma-client-js"
-//     previewFeatures = ["jsonProtocol"]
-// }
+model Category {
+    id              String         @id @default(cuid())
+    rating          Float          @default(0)
+    name            String
+    color           String
+    description     String         @default("")
+    User            User?          @relation(fields: [userId], references: [id])
+    userId          String?
+    accumulatedTime Float          @default(0)
+    DailyEntry      DailyEntry[]
+    MonthlyEntry    MonthlyEntry[]
+    YearlyEntry     YearlyEntry[]
+    WeekdayEntry    WeekdayEntry[]
 
-// datasource db {
-//     provider = "sqlite"
-//     // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-//     // Further reading:
-//     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-//     // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-//     url      = env("DATABASE_URL")
-// }
+    @@index([userId])
+}
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model DailyEntry {
+    id         String   @id @default(cuid())
+    startTime  DateTime
+    endTime    DateTime
+    category   Category @relation(fields: [categoryId], references: [id])
+    day        Day      @relation(fields: [dayId], references: [id], onDelete: Cascade)
+    dayId      String
+    categoryId String
+
+    @@index([dayId])
+    @@index([categoryId])
+}
+
+model WeekdayEntry {
+    id              String   @id @default(cuid())
+    weekDay         Int
+    category        Category @relation(fields: [categoryId], references: [id])
+    week            Week     @relation(fields: [weekId], references: [id], onDelete: Cascade)
+    weekId          String
+    categoryId      String
+    accumulatedTime Float    @default(0)
+    rating          Float    @default(0)
+
+    @@index([weekId])
+    @@index([categoryId])
+}
+
+model MonthlyEntry {
+    id              String   @id @default(cuid())
+    month           Month    @relation(fields: [monthId], references: [id], onDelete: Cascade)
+    monthId         String
+    category        Category @relation(fields: [categoryId], references: [id])
+    categoryId      String
+    accumulatedTime Float    @default(0)
+    rating          Float    @default(0)
+
+    @@index([monthId])
+    @@index([categoryId])
+}
+
+model YearlyEntry {
+    id              String   @id @default(cuid())
+    rating          Float    @default(0)
+    year            Year     @relation(fields: [yearId], references: [id], onDelete: Cascade)
+    yearId          String
+    category        Category @relation(fields: [categoryId], references: [id])
+    categoryId      String
+    accumulatedTime Float    @default(0)
+
+    @@index([yearId])
+    @@index([categoryId])
+}
+
+model Day {
+    id        String       @id @default(cuid())
+    createdAt DateTime     @default(now())
+    rating    Float        @default(0)
+    weekDay   Int
+    date      DateTime     @unique
+    entries   DailyEntry[]
+    Month     Month?       @relation(fields: [monthId], references: [id])
+    monthId   String?
+    User      User?        @relation(fields: [userId], references: [id])
+    userId    String?
+
+    @@index([monthId])
+    @@index([userId])
+}
+
+model Week {
+    id           String         @id @default(cuid())
+    createdAt    DateTime       @default(now())
+    rating       Float          @default(0)
+    date         DateTime       @unique
+    Month        Month?         @relation(fields: [monthId], references: [id])
+    monthId      String?
+    User         User?          @relation(fields: [userId], references: [id])
+    userId       String?
+    weekdayEntry WeekdayEntry[]
+
+    @@index([monthId])
+    @@index([userId])
+}
+
+model Month {
+    id           String         @id @default(cuid())
+    month        Int
+    year         Int
+    days         Day[]
+    Year         Year?          @relation(fields: [yearId], references: [id])
+    yearId       String?
+    MonthlyEntry MonthlyEntry[]
+    User         User?          @relation(fields: [userId], references: [id])
+    userId       String?
+    Week         Week[]
+
+    @@index([yearId])
+    @@index([userId])
+}
+
+model Year {
+    id          String        @id @default(cuid())
+    createdAt   DateTime      @default(now())
+    year        Int
+    months      Month[]
+    YearlyEntry YearlyEntry[]
+    User        User?         @relation(fields: [userId], references: [id])
+    userId      String?
+
+    @@index([userId])
 }
 
 // Necessary for Next auth
@@ -48,6 +157,7 @@ model Account {
     user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
+    @@index([userId])
 }
 
 model Session {
@@ -56,16 +166,25 @@ model Session {
     userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
+    id              String    @id @default(cuid())
+    name            String?
+    email           String?   @unique
+    emailVerified   DateTime?
+    image           String?
+    accounts        Account[]
+    sessions        Session[]
+    weekDaysAverage Json?
+
+    days     Day[]
+    months   Month[]
+    years    Year[]
+    Category Category[]
+    Week     Week[]
 }
 
 model VerificationToken {
