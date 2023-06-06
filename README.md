@@ -1,28 +1,37 @@
-# Create T3 App
+# TimeLume
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+The goal of this app is to be able to log what you do with your time. The logged times are then shown to you in a dashboard so that you can compare with your goals as well as see what you enjoy spending your time on the most.
 
-## What's next? How do I make an app with this?
+## Todo:
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- [ ] Initial log page
+- [ ] Initial dashboard page
+- [ ] Initial goal page
+- [ ] Initial settings page
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+### Log
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+- [ ] Add category modal
+- [ ] List of time blocks
+- [ ] Create time block
+- [ ] Move time blocks around
+- [ ] Switch category
+- [ ] Set name(/desc) for time blocks
 
-## Learn More
+### Dashboard
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+- [ ] Display some account information
+- [ ] This month info
+- [ ] Weekday average
+- [ ] Monthly average
+- [ ] Yearly average
+- [ ] Log out button
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+### Goal
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+- [ ] Per category
+- [ ] Daily goals
 
-## How do I deploy this?
+### Settings
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- [ ] Delete account
