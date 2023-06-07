@@ -18,7 +18,7 @@ const Item: React.FC<Props> = ({ dragId }) => {
     <div
       ref={setNodeRef}
       style={style}
-      className="bg-primary6"
+      className="my-3 h-[60px] rounded-sm bg-primary6 p-4 text-white shadow-md"
       data-id={dragId}
       {...attributes}
       {...listeners}
