@@ -1,10 +1,38 @@
 import { type NextPage } from "next";
+import { useState } from "React";
 import Head from "next/head";
 import Link from "next/link";
-//import { api } from "~/utils/api";
+import { DndContext, type DragEndEvent } from "@dnd-kit/core";
+import Item from "../components/Item";
+import { SortableContext, arrayMove } from "@dnd-kit/sortable";
+
+type ListItem = {
+  id: string;
+  content: string;
+};
 
 const Logger: NextPage = () => {
-  //const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const [items, setItems] = useState<ListItem[]>(() => []);
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      setItems((items) => {
+        console.log("Yo");
+        const activeIndex = items.findIndex((item) => item.id == active.id);
+        const overIndex = items.findIndex((item) => item.id == over.id);
+
+        return arrayMove(items, activeIndex, overIndex);
+      });
+    }
+  };
+
+  const handleCreate = () => {
+    setItems((items) =>
+      items.concat({ id: items.length.toString(), content: "testing" })
+    );
+  };
 
   return (
     <>
@@ -20,6 +48,20 @@ const Logger: NextPage = () => {
               Time<span className="text-[#35469C]">Lume</span>
             </h1>
           </Link>
+
+          <button className="rounded-md bg-primary5 p-5" onClick={handleCreate}>
+            Create
+          </button>
+
+          <DndContext onDragEnd={handleDragEnd}>
+            <div className="bg-neutral3">
+              <SortableContext items={items.map((i) => i.id)}>
+                {items.map((item) => (
+                  <Item key={item.id} dragId={item.id} />
+                ))}
+              </SortableContext>
+            </div>
+          </DndContext>
         </div>
       </main>
     </>
