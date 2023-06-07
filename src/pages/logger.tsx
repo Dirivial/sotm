@@ -5,7 +5,6 @@ import Link from "next/link";
 import { DndContext, type DragEndEvent } from "@dnd-kit/core";
 import Item from "../components/Item";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 type ListItem = {
   id: string;
@@ -14,7 +13,6 @@ type ListItem = {
 
 const Logger: NextPage = () => {
   const [items, setItems] = useState<ListItem[]>(() => []);
-  const [animationParent, enableAnimation] = useAutoAnimate();
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -49,34 +47,19 @@ const Logger: NextPage = () => {
           </h1>
         </Link>
         <div className="container flex h-screen flex-col items-center gap-12 px-4 py-16 ">
-          <div className="flex max-h-full flex-row gap-x-2">
-            <div className="flex flex-col gap-y-2">
+          <div className="flex h-screen max-h-full flex-row gap-x-2">
+            <div>
               <button
                 className="rounded-md bg-primary5 p-5"
                 onClick={handleCreate}
               >
                 Create
               </button>
-              <button
-                className="rounded-md bg-primary5 p-5"
-                onClick={() => enableAnimation(false)}
-              >
-                Disable Animation
-              </button>
-              <button
-                className="rounded-md bg-primary5 p-5"
-                onClick={() => enableAnimation(true)}
-              >
-                Enable Animation
-              </button>
             </div>
 
             <div>
               <DndContext onDragEnd={handleDragEnd}>
-                <div
-                  ref={animationParent}
-                  className="carbon-bg max-h-full min-h-full min-w-[250px] overflow-scroll rounded-sm border-2 p-2"
-                >
+                <div className="carbon-bg h-full max-h-screen min-w-[250px] overflow-scroll rounded-sm border-2 p-2">
                   <SortableContext items={items.map((i) => i.id)}>
                     {items.map((item) => (
                       <Item key={item.id} dragId={item.id} />
