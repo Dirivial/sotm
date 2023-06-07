@@ -35,7 +35,7 @@ const Logger: NextPage = () => {
 
   const handleCreate = () => {
     setItems((items) =>
-      items.concat({ id: items.length.toString(), content: "testing" })
+      items.concat({ id: (items.length + 1).toString(), content: "testing" })
     );
   };
 
