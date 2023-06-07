@@ -2,7 +2,7 @@ import { type NextPage } from "next";
 import { useState } from "React";
 import Head from "next/head";
 import Link from "next/link";
-import { DndContext, type DragEndEvent } from "@dnd-kit/core";
+import { DndContext, DragOverlay, type DragEndEvent } from "@dnd-kit/core";
 import Item from "../components/Item";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 
@@ -13,8 +13,10 @@ type ListItem = {
 
 const Logger: NextPage = () => {
   const [items, setItems] = useState<ListItem[]>(() => []);
+  const [activeId, setActiveId] = useState<number>(-1);
 
   const handleDragEnd = (event: DragEndEvent) => {
+    setActiveId(-1);
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
@@ -25,6 +27,10 @@ const Logger: NextPage = () => {
         return arrayMove(items, activeIndex, overIndex);
       });
     }
+  };
+
+  const handleDragStart = (event: DragEndEvent) => {
+    setActiveId(Number(event.active.id));
   };
 
   const handleCreate = () => {
@@ -50,21 +56,41 @@ const Logger: NextPage = () => {
           <div className="flex h-screen max-h-full flex-row gap-x-2">
             <div>
               <button
-                className="rounded-md bg-primary5 p-5"
+                className="rounded-md bg-primary5 p-5 text-neutral9"
                 onClick={handleCreate}
               >
-                Create
+                Add
               </button>
             </div>
 
             <div>
-              <DndContext onDragEnd={handleDragEnd}>
+              <DndContext
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+              >
                 <div className="carbon-bg h-full max-h-screen min-w-[250px] overflow-scroll rounded-sm border-2 p-2">
                   <SortableContext items={items.map((i) => i.id)}>
                     {items.map((item) => (
-                      <Item key={item.id} dragId={item.id} />
+                      <Item
+                        key={item.id}
+                        dragId={item.id}
+                        value={`Item ${item.id}`}
+                        className={
+                          activeId === Number(item.id) ? "opacity-40" : ""
+                        }
+                      />
                     ))}
                   </SortableContext>
+
+                  <DragOverlay>
+                    {activeId ? (
+                      <Item
+                        className="opacity-90"
+                        dragId={activeId.toString()}
+                        value={`Item ${activeId}`}
+                      />
+                    ) : null}
+                  </DragOverlay>
                 </div>
               </DndContext>
             </div>
