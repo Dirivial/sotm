@@ -91,13 +91,13 @@ export default function CategoryCombobox({
                       {selected ? (
                         <span
                           className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                            active ? "text-white" : "text-neutral3"
+                            active ? "fill-neutral9" : "fill-neutral1"
                           }`}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
-                            className="icon-check h-6 w-6 fill-neutral6"
+                            className="icon-check h-6 w-6"
                           >
                             <path
                               className="primary"
