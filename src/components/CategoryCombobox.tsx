@@ -43,9 +43,17 @@ export default function CategoryCombobox({
             onChange={(event) => setQuery(event.target.value)}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-            <p className="h-5 w-5 text-neutral5" aria-hidden="true">
-              V
-            </p>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              className="icon-cheveron-selection h-5 w-5 fill-neutral5"
+            >
+              <path
+                className="secondary"
+                fill-rule="evenodd"
+                d="M8.7 9.7a1 1 0 1 1-1.4-1.4l4-4a1 1 0 0 1 1.4 0l4 4a1 1 0 1 1-1.4 1.4L12 6.42l-3.3 3.3zm6.6 4.6a1 1 0 0 1 1.4 1.4l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 1.4-1.4l3.3 3.29 3.3-3.3z"
+              />
+            </svg>
           </Combobox.Button>
         </div>
         <Transition
@@ -83,12 +91,19 @@ export default function CategoryCombobox({
                       {selected ? (
                         <span
                           className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                            active ? "text-white" : "text-teal-600"
+                            active ? "text-white" : "text-neutral3"
                           }`}
                         >
-                          <p className="h-5 w-5" aria-hidden="true">
-                            X
-                          </p>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            className="icon-check h-6 w-6 fill-neutral6"
+                          >
+                            <path
+                              className="primary"
+                              d="M10 14.59l6.3-6.3a1 1 0 0 1 1.4 1.42l-7 7a1 1 0 0 1-1.4 0l-3-3a1 1 0 0 1 1.4-1.42l2.3 2.3z"
+                            />
+                          </svg>
                         </span>
                       ) : null}
                     </>
