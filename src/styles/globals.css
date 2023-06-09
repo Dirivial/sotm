@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.carbon-bg {
+.grid-bg {
   background-color: transparent;
   opacity: 0.8;
   background-image: linear-gradient(#b3ecff50 1px, transparent 1px),
