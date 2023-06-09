@@ -1,22 +1,47 @@
 import { type NextPage } from "next";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { DndContext, DragOverlay, type DragEndEvent } from "@dnd-kit/core";
 import Item from "../components/Item";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
+import { Combobox, Transition } from "@headlessui/react";
 
 type ListItem = {
   id: string;
   content: string;
 };
 
+type Category = {
+  id: number;
+  name: string;
+};
+
+const mycategories: Category[] = [
+  { id: 1, name: "Work" },
+  { id: 2, name: "Sleep" },
+  { id: 3, name: "Personal" },
+  { id: 4, name: "Social" },
+  { id: 5, name: "Health" },
+  { id: 6, name: "Other" },
+];
+
 const Logger: NextPage = () => {
   const [items, setItems] = useState<ListItem[]>(() => []);
-  const [activeId, setActiveId] = useState<number>(-1);
+  const [active, setActive] = useState<Category>({ id: 0, name: "" });
+  // const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState(mycategories[0]);
+  const [query, setQuery] = useState("");
+
+  const filteredCategories =
+    query === ""
+      ? mycategories
+      : mycategories.filter((category) => {
+          return category.name.toLowerCase().includes(query.toLowerCase());
+        });
 
   const handleDragEnd = (event: DragEndEvent) => {
-    setActiveId(-1);
+    setActive({ id: 0, name: "" });
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
@@ -30,12 +55,16 @@ const Logger: NextPage = () => {
   };
 
   const handleDragStart = (event: DragEndEvent) => {
-    setActiveId(Number(event.active.id));
+    const i = items.find((item) => item.id == event.active.id);
+    setActive({ id: Number(event.active.id), name: i ? i.content : "" });
   };
 
   const handleCreate = () => {
     setItems((items) =>
-      items.concat({ id: (items.length + 1).toString(), content: "testing" })
+      items.concat({
+        id: (items.length + 1).toString(),
+        content: selectedCategory ? selectedCategory.name : "Item",
+      })
     );
   };
 
@@ -54,7 +83,75 @@ const Logger: NextPage = () => {
         </Link>
         <div className="container flex h-screen flex-col items-center gap-12 px-4 py-16 ">
           <div className="flex h-screen max-h-full flex-row gap-x-2">
-            <div>
+            <div className="flex flex-col gap-y-5 pr-5">
+              <Combobox value={selectedCategory} onChange={setSelectedCategory}>
+                <div className="relative mt-1">
+                  <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+                    <Combobox.Input
+                      className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:outline-none focus:ring-0"
+                      displayValue={(category: Category) => category.name}
+                      onChange={(event) => setQuery(event.target.value)}
+                    />
+                    <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                      <p className="h-5 w-5 text-neutral5" aria-hidden="true">
+                        V
+                      </p>
+                    </Combobox.Button>
+                  </div>
+                  <Transition
+                    as={Fragment}
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                    afterLeave={() => setQuery("")}
+                  >
+                    <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                      {filteredCategories.length === 0 && query !== "" ? (
+                        <div className="relative cursor-default select-none px-4 py-2 text-gray-700">
+                          Nothing found.
+                        </div>
+                      ) : (
+                        filteredCategories.map((category) => (
+                          <Combobox.Option
+                            key={category.id}
+                            className={({ active }) =>
+                              `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                active
+                                  ? "bg-primary3 text-white"
+                                  : "text-neutral1"
+                              }`
+                            }
+                            value={category}
+                          >
+                            {({ selected, active }) => (
+                              <>
+                                <span
+                                  className={`block truncate ${
+                                    selected ? "font-medium" : "font-normal"
+                                  }`}
+                                >
+                                  {category.name}
+                                </span>
+                                {selected ? (
+                                  <span
+                                    className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                                      active ? "text-white" : "text-teal-600"
+                                    }`}
+                                  >
+                                    <p className="h-5 w-5" aria-hidden="true">
+                                      X
+                                    </p>
+                                  </span>
+                                ) : null}
+                              </>
+                            )}
+                          </Combobox.Option>
+                        ))
+                      )}
+                    </Combobox.Options>
+                  </Transition>
+                </div>
+              </Combobox>
               <button
                 className="rounded-md bg-primary5 p-5 text-neutral9"
                 onClick={handleCreate}
@@ -68,26 +165,26 @@ const Logger: NextPage = () => {
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
               >
-                <div className="carbon-bg h-full max-h-screen min-w-[250px] overflow-scroll rounded-sm border-2 p-2">
+                <div className="carbon-bg h-full max-h-screen min-w-[350px] overflow-scroll rounded-sm border-2 border-[#b3ecff50] px-2">
                   <SortableContext items={items.map((i) => i.id)}>
                     {items.map((item) => (
                       <Item
                         key={item.id}
                         dragId={item.id}
-                        value={`Item ${item.id}`}
+                        content={`${item.content}`}
                         className={
-                          activeId === Number(item.id) ? "opacity-40" : ""
+                          active.id === Number(item.id) ? "opacity-40" : ""
                         }
                       />
                     ))}
                   </SortableContext>
 
                   <DragOverlay>
-                    {activeId ? (
+                    {active.id > -1 ? (
                       <Item
                         className="opacity-90"
-                        dragId={activeId.toString()}
-                        value={`Item ${activeId}`}
+                        dragId={active.id.toString()}
+                        content={active.name}
                       />
                     ) : null}
                   </DragOverlay>
