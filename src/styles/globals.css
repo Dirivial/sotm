@@ -10,3 +10,11 @@
   background-position: 12px 12px;
   background-size: 20px 20px;
 }
+
+@layer base {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
