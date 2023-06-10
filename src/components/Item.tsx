@@ -31,7 +31,7 @@ const Item: React.FC<Props> = ({ dragId, content, removeItem, opacity }) => {
     <div
       ref={setNodeRef}
       style={style}
-      className={`my-3 flex flex-row justify-center rounded-sm bg-gradient-to-br from-[#035388] to-[#2BB0ED] align-middle  shadow-md ${opacity}`}
+      className={`my-3 flex flex-row justify-center rounded-md bg-gradient-to-br from-[#035388] to-[#2BB0ED] align-middle  shadow-md ${opacity}`}
     >
       <div className="flex w-1/5 flex-none flex-row border-r-2">
         {/* <SetTimePopover initialTime={time} updateTime={setTime} /> */}
