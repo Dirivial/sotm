@@ -148,49 +148,37 @@ const WeeklyGoal: NextPage = () => {
                       </Tab>
                     ))}
                   </Tab.List>
-                  <Tab.Panels className="mt-2">
-                    {Object.values(weekdays).map((weekday, idx) => (
-                      <Tab.Panel
-                        key={idx}
-                        className={
-                          "h-full max-h-screen rounded-xl p-3 ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2"
-                        }
-                      >
-                        <DndContext
-                          onDragStart={handleDragStart}
-                          onDragEnd={handleDragEnd}
-                        >
-                          <div className="grid-bg h-full max-h-screen min-w-[350px] overflow-scroll rounded-sm border-2 border-[#b3ecff50] px-2">
-                            <SortableContext items={items.map((i) => i.id)}>
-                              {items.map((item) => (
-                                <Item
-                                  key={item.id}
-                                  dragId={item.id}
-                                  content={`${item.content}`}
-                                  opacity={
-                                    active.id === Number(item.id)
-                                      ? "opacity-40"
-                                      : ""
-                                  }
-                                  removeItem={handleRemove}
-                                />
-                              ))}
-                            </SortableContext>
 
-                            <DragOverlay>
-                              {active.id > -1 ? (
-                                <Item
-                                  opacity="opacity-90"
-                                  dragId={active.id.toString()}
-                                  content={active.name}
-                                />
-                              ) : null}
-                            </DragOverlay>
-                          </div>
-                        </DndContext>
-                      </Tab.Panel>
-                    ))}
-                  </Tab.Panels>
+                  <DndContext
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
+                  >
+                    <div className="grid-bg h-full max-h-screen min-w-[350px] overflow-scroll rounded-sm border-2 border-[#b3ecff50] px-2">
+                      <SortableContext items={items.map((i) => i.id)}>
+                        {items.map((item) => (
+                          <Item
+                            key={item.id}
+                            dragId={item.id}
+                            content={`${item.content}`}
+                            opacity={
+                              active.id === Number(item.id) ? "opacity-40" : ""
+                            }
+                            removeItem={handleRemove}
+                          />
+                        ))}
+                      </SortableContext>
+
+                      <DragOverlay>
+                        {active.id > -1 ? (
+                          <Item
+                            opacity="opacity-90"
+                            dragId={active.id.toString()}
+                            content={active.name}
+                          />
+                        ) : null}
+                      </DragOverlay>
+                    </div>
+                  </DndContext>
                 </Tab.Group>
               </div>
             </div>
