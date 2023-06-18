@@ -40,6 +40,14 @@ const Home: NextPage = () => {
                 Log your activities and rate how you felt doing them.
               </div>
             </Link>
+            <Link
+              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-primary5/20"
+              href="/goals"
+              target=""
+            >
+              <h3 className="text-2xl font-bold">Goals →</h3>
+              <div className="text-lg">Set your goals for each weekday.</div>
+            </Link>
           </div>
           <div className="flex flex-col items-center gap-2">
             {/* <p className="text-2xl text-white">
