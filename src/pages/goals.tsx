@@ -11,6 +11,7 @@ import { Tab } from "@headlessui/react";
 type ListItem = {
   id: string;
   content: string;
+  duration: string;
 };
 
 type Category = {
@@ -93,6 +94,7 @@ const WeeklyGoal: NextPage = () => {
       items.concat({
         id: (items.length + 1).toString(),
         content: selectedCategory ? selectedCategory.name : "Item",
+        duration: "00:00",
       })
     );
   };

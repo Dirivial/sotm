@@ -10,6 +10,7 @@ import CategoryCombobox from "~/components/CategoryCombobox";
 type ListItem = {
   id: string;
   content: string;
+  duration: string;
 };
 
 type Category = {
@@ -59,6 +60,7 @@ const Logger: NextPage = () => {
       items.concat({
         id: (items.length + 1).toString(),
         content: selectedCategory ? selectedCategory.name : "Item",
+        duration: "00:00",
       })
     );
   };
