@@ -69,6 +69,18 @@ const Logger: NextPage = () => {
     setItems((items) => items.filter((item) => item.id !== id));
   };
 
+  const handleItemUpdate = (id: string, content: string, time: string) => {
+    setItems((items) =>
+      items.map((li) => {
+        if (li.id === id) {
+          li.content = content;
+          li.duration = time;
+        }
+        return li;
+      })
+    );
+  };
+
   return (
     <>
       <Head>
@@ -113,6 +125,8 @@ const Logger: NextPage = () => {
                           active.id === Number(item.id) ? "opacity-40" : ""
                         }
                         removeItem={handleRemove}
+                        initialTime={"--:--"}
+                        updateContent={handleItemUpdate}
                       />
                     ))}
                   </SortableContext>
@@ -123,6 +137,8 @@ const Logger: NextPage = () => {
                         opacity="opacity-90"
                         dragId={active.id.toString()}
                         content={active.name}
+                        initialTime={"--:--"}
+                        updateContent={handleItemUpdate}
                       />
                     ) : null}
                   </DragOverlay>

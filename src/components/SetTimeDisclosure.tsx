@@ -11,20 +11,15 @@ export function SetTimeDisclosure({ initialTime, updateTime }: Props) {
   const [timeM, setTimeM] = useState(Number(initialTime.slice(3)));
 
   const handleTimeChange = (hours: boolean, value: string) => {
+    const N =
+      Number(value) <= 0 ? "00" : Number(value) < 10 ? "0" + value : value;
+
     if (hours) {
-      setTimeH(Number(value));
-      updateTime(
-        `${Number(value) < 10 ? "0" + value : value}:${
-          timeM < 10 ? "0" + timeM.toString() : timeM
-        }`
-      );
+      setTimeH(Number(N));
+      updateTime(`${N}:${timeM < 10 ? "0" + timeM.toString() : timeM}`);
     } else {
-      setTimeM(Number(value));
-      updateTime(
-        `${timeH < 10 ? "0" + timeH.toString() : timeH}:${
-          Number(value) < 10 ? "0" + value : value
-        }`
-      );
+      setTimeM(Number(N));
+      updateTime(`${timeH < 10 ? "0" + timeH.toString() : timeH}:${N}`);
     }
   };
 

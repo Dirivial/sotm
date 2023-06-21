@@ -19,6 +19,12 @@ type Category = {
   name: string;
 };
 
+type ActiveItem = {
+  id: number;
+  name: string;
+  duration: string;
+};
+
 type Weekday = {
   id: number;
   name: string;
@@ -47,7 +53,11 @@ const WeeklyGoal: NextPage = () => {
   ]);
   const [currentDay, setCurrentDay] = useState<number>(0);
   const [items, setItems] = useState<ListItem[]>(() => []);
-  const [active, setActive] = useState<Category>({ id: 0, name: "" });
+  const [active, setActive] = useState<ActiveItem>({
+    id: 0,
+    name: "",
+    duration: "00:00",
+  });
   // const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>({
     id: 1,
@@ -55,7 +65,7 @@ const WeeklyGoal: NextPage = () => {
   });
 
   const handleDragEnd = (event: DragEndEvent) => {
-    setActive({ id: 0, name: "" });
+    setActive({ id: 0, name: "", duration: "00:00" });
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
@@ -86,7 +96,12 @@ const WeeklyGoal: NextPage = () => {
 
   const handleDragStart = (event: DragEndEvent) => {
     const i = items.find((item) => item.id == event.active.id);
-    setActive({ id: Number(event.active.id), name: i ? i.content : "" });
+    console.log(i);
+    setActive({
+      id: Number(event.active.id),
+      name: i ? i.content : "",
+      duration: i ? i.duration : "00:00",
+    });
   };
 
   const handleCreate = () => {
@@ -101,6 +116,18 @@ const WeeklyGoal: NextPage = () => {
 
   const handleRemove = (id: string) => {
     setItems((items) => items.filter((item) => item.id !== id));
+  };
+
+  const handleItemUpdate = (id: string, content: string, time: string) => {
+    setItems((items) =>
+      items.map((li) => {
+        if (li.id === id) {
+          li.content = content;
+          li.duration = time;
+        }
+        return li;
+      })
+    );
   };
 
   return (
@@ -166,6 +193,8 @@ const WeeklyGoal: NextPage = () => {
                               active.id === Number(item.id) ? "opacity-40" : ""
                             }
                             removeItem={handleRemove}
+                            initialTime={item.duration}
+                            updateContent={handleItemUpdate}
                           />
                         ))}
                       </SortableContext>
@@ -176,6 +205,8 @@ const WeeklyGoal: NextPage = () => {
                             opacity="opacity-90"
                             dragId={active.id.toString()}
                             content={active.name}
+                            initialTime={active.duration}
+                            updateContent={handleItemUpdate}
                           />
                         ) : null}
                       </DragOverlay>
