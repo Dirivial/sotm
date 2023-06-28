@@ -1,4 +1,4 @@
-import { Disclosure, Popover, Transition } from "@headlessui/react";
+import { Popover, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 
 export interface Props {
@@ -6,7 +6,7 @@ export interface Props {
   updateTime: (time: string) => void;
 }
 
-export function SetTimeDisclosure({ initialTime, updateTime }: Props) {
+export function SetTimePopover({ initialTime, updateTime }: Props) {
   const [timeH, setTimeH] = useState(Number(initialTime.slice(0, 2)));
   const [timeM, setTimeM] = useState(Number(initialTime.slice(3)));
 

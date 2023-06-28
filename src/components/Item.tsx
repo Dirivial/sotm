@@ -1,7 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useState } from "react";
-import { SetTimeDisclosure } from "./SetTimeDisclosure";
+import { SetTimePopover } from "./SetTimePopover";
 
 interface Props {
   dragId: string;
@@ -48,7 +48,7 @@ const Item: React.FC<Props> = ({
       className={`my-3 flex flex-row justify-center rounded-md bg-gradient-to-br from-[#035388] to-[#2BB0ED] align-middle  shadow-md ${opacity}`}
     >
       <div className="flex w-1/5 flex-none flex-row border-r-2">
-        <SetTimeDisclosure initialTime={time} updateTime={handleTimeUpdate} />
+        <SetTimePopover initialTime={time} updateTime={handleTimeUpdate} />
       </div>
       <div
         className={"h-[60px] flex-grow p-4 text-white"}
