@@ -1,4 +1,12 @@
 import { z } from "zod";
-import { createTRPCRouter } from "~/server/api/trpc";
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
-export const userRouter = createTRPCRouter({});
+const userRouter = createTRPCRouter({
+  getById: publicProcedure.input(z.string()).query(({ ctx, input }) => {
+    return ctx.prisma.user.findFirst({
+      where: {
+        id: input,
+      },
+    });
+  }),
+});

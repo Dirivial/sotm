@@ -1,6 +1,7 @@
 import { dailyRouter } from "~/server/api/routers/daily";
 import { userRouter } from "~/server/api/routers/user";
 import { createTRPCRouter } from "~/server/api/trpc";
+import { categoryRouter } from "./routers/category";
 
 /**
  * This is the primary router for your server.
@@ -10,6 +11,7 @@ import { createTRPCRouter } from "~/server/api/trpc";
 export const appRouter = createTRPCRouter({
   daily: dailyRouter,
   user: userRouter,
+  category: categoryRouter,
 });
 
 // export type definition of API
