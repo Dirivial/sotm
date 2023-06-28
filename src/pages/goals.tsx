@@ -11,6 +11,7 @@ import { Tab } from "@headlessui/react";
 type ListItem = {
   id: string;
   content: string;
+  weekday: number;
   duration: string;
 };
 
@@ -32,6 +33,26 @@ type Weekday = {
   list_items: ListItem[];
 };
 
+type Week = {
+  0: Weekday;
+  1: Weekday;
+  2: Weekday;
+  3: Weekday;
+  4: Weekday;
+  5: Weekday;
+  6: Weekday;
+};
+
+const tabs = [
+  { name: "Monday", abb_name: "Mon" },
+  { name: "Tuesday", abb_name: "Tue" },
+  { name: "Wednesday", abb_name: "Wed" },
+  { name: "Thursday", abb_name: "Thu" },
+  { name: "Friday", abb_name: "Fri" },
+  { name: "Saturday", abb_name: "Sat" },
+  { name: "Sunday", abb_name: "Sun" },
+];
+
 const mycategories: Category[] = [
   { id: 1, name: "Work" },
   { id: 2, name: "Sleep" },
@@ -41,16 +62,18 @@ const mycategories: Category[] = [
   { id: 6, name: "Other" },
 ];
 
+// Keeping this here for now, might be useful later
+// const [weekdays, setWeekdays] = useState<Week>({
+//   0: { id: 0, name: "Monday", abb_name: "Mon", list_items: [] },
+//   1: { id: 1, name: "Tuesday", abb_name: "Tue", list_items: [] },
+//   2: { id: 2, name: "Wednesday", abb_name: "Wed", list_items: [] },
+//   3: { id: 3, name: "Thursday", abb_name: "Thu", list_items: [] },
+//   4: { id: 4, name: "Friday", abb_name: "Fri", list_items: [] },
+//   5: { id: 5, name: "Saturday", abb_name: "Sat", list_items: [] },
+//   6: { id: 6, name: "Sunday", abb_name: "Sun", list_items: [] },
+// });
+
 const WeeklyGoal: NextPage = () => {
-  const [weekdays, setWeekdays] = useState<Weekday[]>([
-    { id: 0, name: "Monday", abb_name: "Mon", list_items: [] },
-    { id: 1, name: "Tuesday", abb_name: "Tue", list_items: [] },
-    { id: 2, name: "Wednesday", abb_name: "Wed", list_items: [] },
-    { id: 3, name: "Thursday", abb_name: "Thu", list_items: [] },
-    { id: 4, name: "Friday", abb_name: "Fri", list_items: [] },
-    { id: 5, name: "Saturday", abb_name: "Sat", list_items: [] },
-    { id: 6, name: "Sunday", abb_name: "Sun", list_items: [] },
-  ]);
   const [currentDay, setCurrentDay] = useState<number>(0);
   const [items, setItems] = useState<ListItem[]>(() => []);
   const [active, setActive] = useState<ActiveItem>({
@@ -79,18 +102,8 @@ const WeeklyGoal: NextPage = () => {
   };
 
   const handleDayChange = (index: number) => {
-    setWeekdays((weekdays) => {
-      if (weekdays.length > currentDay && currentDay >= 0) {
-        const weekday = weekdays[currentDay];
-        if (weekday) {
-          weekday.list_items = items;
-          weekdays[currentDay] = weekday;
-        }
-      }
-      return weekdays;
-    });
-    const newDay = weekdays[index];
-    setItems(newDay?.list_items ? newDay.list_items : []);
+    if (index === currentDay) return;
+    if (index < 0 || index > 6) return;
     setCurrentDay(index);
   };
 
@@ -110,6 +123,7 @@ const WeeklyGoal: NextPage = () => {
         id: (items.length + 1).toString(),
         content: selectedCategory ? selectedCategory.name : "Item",
         duration: "00:00",
+        weekday: currentDay,
       })
     );
   };
@@ -158,19 +172,19 @@ const WeeklyGoal: NextPage = () => {
               </button>
             </div>
 
-            <div>
-              <div className="w-full max-w-md px-2 sm:px-0">
+            <div className="">
+              <div className="h-full w-full max-w-md px-2 sm:px-0">
                 <Tab.Group onChange={handleDayChange}>
                   <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
-                    {weekdays.map((weekday) => (
+                    {tabs.map((weekday, index) => (
                       <Tab
-                        key={weekday.id}
+                        key={index}
                         className={({ selected }) =>
-                          "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700 " +
-                          "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 " +
+                          "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-neutral7 " +
+                          "focus:outline-none " +
                           (selected
-                            ? "bg-white shadow"
-                            : "text-blue-100 hover:bg-white/[0.12] hover:text-white")
+                            ? "bg-supportingBlue0 text-neutral9 shadow"
+                            : "hover:bg-primary1/[0.3] hover:text-neutral9")
                         }
                       >
                         {weekday.abb_name}
@@ -182,21 +196,25 @@ const WeeklyGoal: NextPage = () => {
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}
                   >
-                    <div className="grid-bg h-full max-h-screen min-w-[350px] overflow-scroll rounded-sm border-2 border-[#b3ecff50] px-2">
+                    <div className="grid-bg mt-2 h-5/6 max-h-full min-w-[350px] overflow-scroll rounded-sm border-2 border-[#b3ecff50] px-2">
                       <SortableContext items={items.map((i) => i.id)}>
-                        {items.map((item) => (
-                          <Item
-                            key={item.id}
-                            dragId={item.id}
-                            content={`${item.content}`}
-                            opacity={
-                              active.id === Number(item.id) ? "opacity-40" : ""
-                            }
-                            removeItem={handleRemove}
-                            initialTime={item.duration}
-                            updateContent={handleItemUpdate}
-                          />
-                        ))}
+                        {items
+                          .filter((value) => value.weekday === currentDay)
+                          .map((item) => (
+                            <Item
+                              key={item.id}
+                              dragId={item.id}
+                              content={`${item.content}`}
+                              opacity={
+                                active.id === Number(item.id)
+                                  ? "opacity-40"
+                                  : ""
+                              }
+                              removeItem={handleRemove}
+                              initialTime={item.duration}
+                              updateContent={handleItemUpdate}
+                            />
+                          ))}
                       </SortableContext>
 
                       <DragOverlay>
