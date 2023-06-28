@@ -18,6 +18,12 @@ type Category = {
   name: string;
 };
 
+type ActiveItem = {
+  id: number;
+  name: string;
+  duration: string;
+};
+
 const mycategories: Category[] = [
   { id: 1, name: "Work" },
   { id: 2, name: "Sleep" },
@@ -29,7 +35,11 @@ const mycategories: Category[] = [
 
 const Logger: NextPage = () => {
   const [items, setItems] = useState<ListItem[]>(() => []);
-  const [active, setActive] = useState<Category>({ id: 0, name: "" });
+  const [active, setActive] = useState<ActiveItem>({
+    id: 0,
+    name: "",
+    duration: "00:00",
+  });
   // const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>({
     id: 1,
@@ -37,7 +47,7 @@ const Logger: NextPage = () => {
   });
 
   const handleDragEnd = (event: DragEndEvent) => {
-    setActive({ id: 0, name: "" });
+    setActive({ id: 0, name: "", duration: "00:00" });
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
@@ -52,7 +62,11 @@ const Logger: NextPage = () => {
 
   const handleDragStart = (event: DragEndEvent) => {
     const i = items.find((item) => item.id == event.active.id);
-    setActive({ id: Number(event.active.id), name: i ? i.content : "" });
+    setActive({
+      id: Number(event.active.id),
+      name: i ? i.content : "",
+      duration: i ? i.duration : "00:00",
+    });
   };
 
   const handleCreate = () => {
@@ -125,7 +139,7 @@ const Logger: NextPage = () => {
                           active.id === Number(item.id) ? "opacity-40" : ""
                         }
                         removeItem={handleRemove}
-                        initialTime={"--:--"}
+                        initialTime={item.duration}
                         updateContent={handleItemUpdate}
                       />
                     ))}
@@ -137,7 +151,7 @@ const Logger: NextPage = () => {
                         opacity="opacity-90"
                         dragId={active.id.toString()}
                         content={active.name}
-                        initialTime={"--:--"}
+                        initialTime={active.duration}
                         updateContent={handleItemUpdate}
                       />
                     ) : null}
