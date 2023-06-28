@@ -1,10 +1,35 @@
 import { type NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
-//import { api } from "~/utils/api";
+import { useState } from "react";
+import { api } from "~/utils/api";
+
+import { Category } from "@prisma/client";
 
 const Dashboard: NextPage = () => {
-  //const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const { data: sessionData } = useSession();
+  const [categoryName, setCategoryName] = useState("");
+  const categories = api.category.getAll.useQuery({
+    id: sessionData?.user?.id ? sessionData?.user?.id : "",
+  }).data;
+
+  const createCategory = api.category.add.useMutation();
+
+  const testButton = () => {
+    console.log(categories);
+  };
+
+  const sendButton = () => {
+    try {
+      createCategory.mutate({
+        name: categoryName,
+        color: "red",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -20,6 +45,21 @@ const Dashboard: NextPage = () => {
               Time<span className="text-[#35469C]">Lume</span>
             </h1>
           </Link>
+        </div>
+
+        <div>
+          <h2>Create a new category:</h2>
+          <input
+            value={categoryName}
+            onChange={(e) => setCategoryName(e.target.value)}
+          />
+          <button onClick={() => sendButton()}>Add</button>
+          <button onClick={testButton}>Epic button</button>
+          <p>
+            {categories?.map((item, key) => {
+              return <p key={key}>{item.name}</p>;
+            })}
+          </p>
         </div>
       </main>
     </>
