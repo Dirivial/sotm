@@ -5,8 +5,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { api } from "~/utils/api";
 
-import { Category } from "@prisma/client";
-
 const Dashboard: NextPage = () => {
   const { data: sessionData } = useSession();
   const [categoryName, setCategoryName] = useState("");

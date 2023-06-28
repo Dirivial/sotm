@@ -26,23 +26,6 @@ type ActiveItem = {
   duration: string;
 };
 
-type Weekday = {
-  id: number;
-  name: string;
-  abb_name: string;
-  list_items: ListItem[];
-};
-
-type Week = {
-  0: Weekday;
-  1: Weekday;
-  2: Weekday;
-  3: Weekday;
-  4: Weekday;
-  5: Weekday;
-  6: Weekday;
-};
-
 const tabs = [
   { name: "Monday", abb_name: "Mon" },
   { name: "Tuesday", abb_name: "Tue" },
@@ -63,6 +46,12 @@ const mycategories: Category[] = [
 ];
 
 // Keeping this here for now, might be useful later
+// type Weekday = {
+//   id: number;
+//   name: string;
+//   abb_name: string;
+//   list_items: ListItem[];
+// };
 // const [weekdays, setWeekdays] = useState<Week>({
 //   0: { id: 0, name: "Monday", abb_name: "Mon", list_items: [] },
 //   1: { id: 1, name: "Tuesday", abb_name: "Tue", list_items: [] },
