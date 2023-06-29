@@ -6,16 +6,12 @@ import { DndContext, DragOverlay, type DragEndEvent } from "@dnd-kit/core";
 import Item from "../components/Item";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import CategoryCombobox from "~/components/CategoryCombobox";
+import { type Category } from "@prisma/client";
 
 type ListItem = {
   id: string;
   content: string;
   duration: string;
-};
-
-type Category = {
-  id: number;
-  name: string;
 };
 
 type ActiveItem = {
@@ -24,14 +20,7 @@ type ActiveItem = {
   duration: string;
 };
 
-const mycategories: Category[] = [
-  { id: 1, name: "Work" },
-  { id: 2, name: "Sleep" },
-  { id: 3, name: "Personal" },
-  { id: 4, name: "Social" },
-  { id: 5, name: "Health" },
-  { id: 6, name: "Other" },
-];
+const mycategories: Category[] = [];
 
 const Logger: NextPage = () => {
   const [items, setItems] = useState<ListItem[]>(() => []);
@@ -42,9 +31,11 @@ const Logger: NextPage = () => {
   });
   // const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>({
-    id: 1,
+    id: "1",
     name: "Work",
-  });
+    color: "#000000",
+    userId: "1",
+  } as Category);
 
   const handleDragEnd = (event: DragEndEvent) => {
     setActive({ id: 0, name: "", duration: "00:00" });

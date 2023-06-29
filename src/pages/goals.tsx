@@ -7,17 +7,13 @@ import Item from "../components/Item";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import CategoryCombobox from "~/components/CategoryCombobox";
 import { Tab } from "@headlessui/react";
+import { type Category } from "@prisma/client";
 
 type ListItem = {
   id: string;
   content: string;
   weekday: number;
   duration: string;
-};
-
-type Category = {
-  id: number;
-  name: string;
 };
 
 type ActiveItem = {
@@ -36,14 +32,7 @@ const tabs = [
   { name: "Sunday", abb_name: "Sun" },
 ];
 
-const mycategories: Category[] = [
-  { id: 1, name: "Work" },
-  { id: 2, name: "Sleep" },
-  { id: 3, name: "Personal" },
-  { id: 4, name: "Social" },
-  { id: 5, name: "Health" },
-  { id: 6, name: "Other" },
-];
+const mycategories: Category[] = [];
 
 // Keeping this here for now, might be useful later
 // type Weekday = {
@@ -72,9 +61,11 @@ const WeeklyGoal: NextPage = () => {
   });
   // const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>({
-    id: 1,
+    id: "",
     name: "Work",
-  });
+    color: "",
+    userId: "",
+  } as Category);
 
   const handleDragEnd = (event: DragEndEvent) => {
     setActive({ id: 0, name: "", duration: "00:00" });

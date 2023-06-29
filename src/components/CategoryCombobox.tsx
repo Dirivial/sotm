@@ -1,10 +1,6 @@
 import { Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
-
-type Category = {
-  id: number;
-  name: string;
-};
+import { type Category } from "@prisma/client";
 
 type Props = {
   categories: Category[];
@@ -16,7 +12,9 @@ export default function CategoryCombobox({
   updateSelected,
 }: Props) {
   const [selectedCategory, setSelectedCategory] = useState<Category>(
-    categories[0] ? categories[0] : { id: 0, name: "" }
+    categories[0]
+      ? categories[0]
+      : ({ id: "", name: "", color: "", userId: "" } as Category)
   );
 
   const [query, setQuery] = useState("");
